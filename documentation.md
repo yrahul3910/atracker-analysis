@@ -1,7 +1,7 @@
 ## Categorization rules
 
 - The categories are the ones in the graph above.
-- If multiple activities are being performed simultaneously (e.g., watching YouTube while eating), the _primary_ activity is registered. In the previous example, it would be coded as "Streaming", NOT "Food"). A general rule (that is not perfectly accurate) is the following two questions: (a) when describing what you're doing to a friend, what do you mention first? (b) which activity takes more of the time?
+- If multiple activities are being performed simultaneously (e.g., watching YouTube while eating), the _primary_ activity is registered. In the previous example, it would be coded as "Streaming", NOT "Food". A general rule (that is not perfectly accurate) is the following two questions: (a) when describing what you're doing to a friend, what do you mention first? (b) which activity takes more of the time?
 - Some activities are grouped: _any_ activity in the washroom are grouped into "Washroom"; _all_ forms of social media are grouped into "Social media"; _any_ streaming service being used categorizes as "Streaming".
 - If you're wondering, working on this is categorized as "Programming".
 
@@ -14,3 +14,7 @@
 - Because of the above rule, friends coming over is categorized as "Misc".
 - Listening to music while doing nothing else is categorized as "Misc". However, doing anything while listening to music (such as working) is categorized as that activity. 
 - Doing dishes is _typically_ categorized as "Misc"; however, a lot of dishwashing actually happens as a result of noticing the dishes while roaming around the house--in these specific cases, it is categorized as "Roaming".
+
+### Update: May 12, 2023
+
+- When performing tasks outside, only the *travel* portion is marked as "Roaming"; activities performed in between (work, coffee, etc.) are coded accordingly. This change makes coding in line with "Working".
