@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "atracker"
+version = "0.1.0"
+description = ""
+authors = ["Rahul Yedida <rahul.yedida@pm.me>"]
+license = "AGPL 3.0"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+streamlit = "^1.23.1"
+matplotlib = "^3.7.1"
+pandas = "^2.0.2"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

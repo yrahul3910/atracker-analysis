@@ -23,7 +23,6 @@ def set_ticks(x: pd.Series, ax: plt.Axes):
     """
     Set ticks for ax based on the date range x
     """
-    print(x, x.max())
     date_range = x.max() - x.min()
 
     ax.tick_params(axis='x', rotation=45)
