@@ -19,6 +19,35 @@ SECONDS_PER_DAY = 86400
 SECONDS_PER_HOUR = 3600
 
 
+def check_password():
+    """Returns `True` if the user had the correct password."""
+
+    def password_entered():
+        """Checks whether a password entered by the user is correct."""
+        if st.session_state["password"] == st.secrets["password"]:
+            st.session_state["password_correct"] = True
+            del st.session_state["password"]  # don't store password
+        else:
+            st.session_state["password_correct"] = False
+
+    if "password_correct" not in st.session_state:
+        # First run, show input for password.
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        return False
+    elif not st.session_state["password_correct"]:
+        # Password not correct, show input + error.
+        st.text_input(
+            "Password", type="password", on_change=password_entered, key="password"
+        )
+        st.error("😕 Password incorrect")
+        return False
+    else:
+        # Password correct.
+        return True
+
+
 def set_ticks(x: pd.Series, ax: plt.Axes):
     """
     Set ticks for ax based on the date range x
@@ -170,41 +199,42 @@ def get_moving_average(df: pd.DataFrame, window: int = 3):
     return fig
 
 
-activity_df = pd.read_csv(ACTIVITY_FILENAME)
-activity_df[TASK_NAME_FIELD] = activity_df[TASK_NAME_FIELD].apply(lambda x: x.strip())
-activity_df.drop([' Task description', ' Note', ' Tag'], axis=1, inplace=True)
+if check_password():
+    activity_df = pd.read_csv(ACTIVITY_FILENAME)
+    activity_df[TASK_NAME_FIELD] = activity_df[TASK_NAME_FIELD].apply(lambda x: x.strip())
+    activity_df.drop([' Task description', ' Note', ' Tag'], axis=1, inplace=True)
 
-steps_df = pd.read_csv(STEPS_FILENAME)
-steps_df['Date'] = pd.to_datetime(steps_df['Date'])
+    steps_df = pd.read_csv(STEPS_FILENAME)
+    steps_df['Date'] = pd.to_datetime(steps_df['Date'])
 
-first_date = datetime.strptime(
-    activity_df[START_TIME_FIELD].iloc[0], '%b %d, %Y at %I:%M:%S %p')
-last_date = datetime.strptime(
-    activity_df[START_TIME_FIELD].iloc[-1], '%b %d, %Y at %I:%M:%S %p')
+    first_date = datetime.strptime(
+        activity_df[START_TIME_FIELD].iloc[0], '%b %d, %Y at %I:%M:%S %p')
+    last_date = datetime.strptime(
+        activity_df[START_TIME_FIELD].iloc[-1], '%b %d, %Y at %I:%M:%S %p')
 
-# ATracker can't seem to figure out which way to order things
-if first_date > last_date:
-    first_date, last_date = last_date, first_date
+    # ATracker can't seem to figure out which way to order things
+    if first_date > last_date:
+        first_date, last_date = last_date, first_date
 
-st.title('Activity analysis')
-st.markdown(DOCUMENTATION)
+    st.title('Activity analysis')
+    st.markdown(DOCUMENTATION)
 
-st.header('Average day')
-start_date = datetime.combine(st.date_input('Start date', first_date.date()), datetime.min.time())
-end_date = datetime.combine(st.date_input('End date', last_date.date()), datetime.max.time())
-st.pyplot(get_average_day_in_range(activity_df.copy(), start_date, end_date))
+    st.header('Average day')
+    start_date = datetime.combine(st.date_input('Start date', first_date.date()), datetime.min.time())
+    end_date = datetime.combine(st.date_input('End date', last_date.date()), datetime.max.time())
+    st.pyplot(get_average_day_in_range(activity_df.copy(), start_date, end_date))
 
-st.header('Daily activity')
-activities = st.multiselect('Activities', activity_df[TASK_NAME_FIELD].unique())
+    st.header('Daily activity')
+    activities = st.multiselect('Activities', activity_df[TASK_NAME_FIELD].unique())
 
-if len(activities) == 0:
-    st.markdown('Since the date range is large, the plot shows moving average with a window size of 3.')
-    raw = st.checkbox('Show raw data instead')
-else:
-    raw = False
+    if len(activities) == 0:
+        st.markdown('Since the date range is large, the plot shows moving average with a window size of 3.')
+        raw = st.checkbox('Show raw data instead')
+    else:
+        raw = False
 
-st.pyplot(get_daily_chart(activity_df.copy(), steps_df.copy(), activities, raw=raw))
+    st.pyplot(get_daily_chart(activity_df.copy(), steps_df.copy(), activities, raw=raw))
 
-st.header('Moving average')
-window = st.slider('Window size', 1, 7, 3)
-st.pyplot(get_moving_average(activity_df.copy(), window))
+    st.header('Moving average')
+    window = st.slider('Window size', 1, 7, 3)
+    st.pyplot(get_moving_average(activity_df.copy(), window))
